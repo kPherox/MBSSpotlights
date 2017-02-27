@@ -194,7 +194,7 @@
 				<verbClass>Verb_Shoot</verbClass>
 				<hasStandardCommand>true</hasStandardCommand>
 				<projectileDef>Bullet_Spotlight</projectileDef>
-				<warmupTicks>0</warmupTicks>
+				<warmupTime>0</warmupTime>
 				<range>50</range>
 				<minRange>0.5</minRange>
 			</li>
@@ -281,7 +281,7 @@
     <building>
       <ai_combatDangerous>true</ai_combatDangerous>
       <turretGunDef>Gun_TurretImprovised</turretGunDef>
-      <turretBurstCooldownTicks>310</turretBurstCooldownTicks>
+      <turretBurstCooldownTime>310</turretBurstCooldownTime>
       <turretTopgraphicPath>Things/Building/Security/TurretSpotlightTopconcept</turretTopgraphicPath>
     </building>
     <designationHotKey>Misc2</designationHotKey>
@@ -317,7 +317,7 @@
     <canBeSpawningInventory>false</canBeSpawningInventory>
     <tradeability>Never</tradeability>
     <destroyOnDrop>true</destroyOnDrop>
-    <canMakeOnMapGen>false</canMakeOnMapGen>
+    <scatterableOnMapGen>false</scatterableOnMapGen>
     <statBases>
       <AccuracyTouch>0.80</AccuracyTouch>
       <AccuracyShort>0.64</AccuracyShort>
@@ -333,7 +333,7 @@
         <verbClass>Verb_Shoot</verbClass>
         <hasStandardCommand>true</hasStandardCommand>
         <projectileDef>Bullet_TurretImprovised</projectileDef>
-        <warmupTicks>90</warmupTicks>
+        <warmupTime>90</warmupTime>
         <range>25.9</range>
         <ticksBetweenBurstShots>8</ticksBetweenBurstShots>
         <burstShotCount>3</burstShotCount>
