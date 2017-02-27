@@ -21,7 +21,7 @@ namespace Spotlights
         public static Material ForcedTargetLineMat = MaterialPool.MatFrom(GenDraw.LineTexPath,
             ShaderDatabase.Transparent, new Color(1f, 0.5f, 0.5f));
 
-        protected TargetInfo currentTargetInt = TargetInfo.Invalid;
+        protected LocalTargetInfo currentTargetInt = LocalTargetInfo.Invalid;
         private Thing gunInt;
         protected TurretTop top;
         protected CompPowerTrader powerComp;
@@ -36,7 +36,7 @@ namespace Spotlights
             get { return this.Gun.TryGetComp<CompEquippable>(); }
         }
 
-        public override TargetInfo CurrentTarget
+        public override LocalTargetInfo CurrentTarget
         {
             get { return this.currentTargetInt; }
         }
@@ -99,12 +99,12 @@ namespace Spotlights
             this.top = new TurretTop((Building_Turret) this);
         }
 
-        public override void SpawnSetup()
+        public override void SpawnSetup(Map map)
         {
-            base.SpawnSetup();
+            base.SpawnSetup(map);
             this.powerComp = this.GetComp<CompPowerTrader>();
             this.mannableComp = this.GetComp<CompMannable>();
-            this.currentTargetInt = TargetInfo.Invalid;
+            this.currentTargetInt = LocalTargetInfo.Invalid;
             this.burstWarmupTicksLeft = 0;
             this.burstCooldownTicksLeft = 0;
         }
@@ -117,16 +117,16 @@ namespace Spotlights
             Scribe_Values.LookValue<bool>(ref this.holdFire, "holdFire", false, false);
         }
 
-        public override void OrderAttack(TargetInfo targ)
+        public override void OrderAttack(LocalTargetInfo targ)
         {
             if ((double) (targ.Cell - this.Position).LengthHorizontal <
                 (double) this.GunCompEq.PrimaryVerb.verbProps.minRange)
-                Messages.Message("MessageTargetBelowMinimumRange".Translate(), (TargetInfo) ((Thing) this),
+                Messages.Message("MessageTargetBelowMinimumRange".Translate(), (TargetInfo) (this),
                     MessageSound.RejectInput);
             else if ((double) (targ.Cell - this.Position).LengthHorizontal >
                      (double) this.GunCompEq.PrimaryVerb.verbProps.range)
             {
-                Messages.Message("MessageTargetBeyondMaximumRange".Translate(), (TargetInfo) ((Thing) this),
+                Messages.Message("MessageTargetBeyondMaximumRange".Translate(), (TargetInfo) (this),
                     MessageSound.RejectInput);
             }
             else
@@ -176,19 +176,19 @@ namespace Spotlights
         protected void TryStartShootSomething()
         {
             if (this.forcedTarget.ThingDestroyed)
-                this.forcedTarget = (TargetInfo) ((Thing) null);
-            if (this.holdFire && this.CanToggleHoldFire || this.GunCompEq.PrimaryVerb.verbProps.projectileDef.projectile.flyOverhead && Find.RoofGrid.Roofed(this.Position))
+                this.forcedTarget = null;
+            if (this.holdFire && this.CanToggleHoldFire || this.GunCompEq.PrimaryVerb.verbProps.projectileDef.projectile.flyOverhead && Find.VisibleMap.roofGrid.Roofed(this.Position))
                 return;
             bool isValid = this.currentTargetInt.IsValid;
-            this.currentTargetInt = !this.forcedTarget.IsValid ? this.TryFindNewTarget() : this.forcedTarget;
+            this.currentTargetInt = !this.forcedTarget.IsValid ? (LocalTargetInfo)this.TryFindNewTarget() : this.forcedTarget;
             if (!isValid && this.currentTargetInt.IsValid)
             {
-                SoundDef.Named("SpotlightOn").PlayOneShot((SoundInfo) this.Position);
+                SoundDef.Named("SpotlightOn").PlayOneShot(new TargetInfo(Position, Map, false));
             }
             if (!this.currentTargetInt.IsValid)
                 return;
-            if (this.def.building.turretBurstWarmupTicks > 0)
-                this.burstWarmupTicksLeft = this.def.building.turretBurstWarmupTicks;
+            if (this.def.building.turretBurstWarmupTime > 0)
+                this.burstWarmupTicksLeft = this.def.building.turretBurstWarmupTime.SecondsToTicks();
             else
             {
 //                Log.Message("MBS Pew Pew TryStartShootSomething");
@@ -203,7 +203,7 @@ namespace Spotlights
             float range = this.GunCompEq.PrimaryVerb.verbProps.range;
             float minRange = this.GunCompEq.PrimaryVerb.verbProps.minRange;
             Building t;
-            if (Rand.Value < 0.5f && this.GunCompEq.PrimaryVerb.verbProps.projectileDef.projectile.flyOverhead && faction.HostileTo(Faction.OfPlayer) && Find.ListerBuildings.allBuildingsColonist.Where(delegate (Building x)
+            if (Rand.Value < 0.5f && this.GunCompEq.PrimaryVerb.verbProps.projectileDef.projectile.flyOverhead && faction.HostileTo(Faction.OfPlayer) && Find.VisibleMap.listerBuildings.allBuildingsColonist.Where(delegate (Building x)
                 {
                     float num = x.Position.DistanceToSquared(this.Position);
                     return num > minRange*minRange && num < range*range;
@@ -238,7 +238,7 @@ namespace Spotlights
             {
                 if (this.GunCompEq.PrimaryVerb.verbProps.projectileDef.projectile.flyOverhead)
                 {
-                    RoofDef roofDef = Find.RoofGrid.RoofAt(t.Position);
+                    RoofDef roofDef = Find.VisibleMap.roofGrid.RoofAt(t.Position);
                     if (roofDef != null && roofDef.isThickRoof)
                         return false;
                 }
@@ -257,9 +257,9 @@ namespace Spotlights
 
         protected void BurstComplete()
         {
-            this.burstCooldownTicksLeft = this.def.building.turretBurstCooldownTicks < 0
-                ? this.GunCompEq.PrimaryVerb.verbProps.defaultCooldownTicks
-                : this.def.building.turretBurstCooldownTicks;
+            this.burstCooldownTicksLeft = this.def.building.turretBurstCooldownTime.SecondsToTicks() > 0
+                ? this.GunCompEq.PrimaryVerb.verbProps.defaultCooldownTime.SecondsToTicks()
+                : this.def.building.turretBurstCooldownTime.SecondsToTicks();
             this.loaded = false;
         }
 
@@ -363,7 +363,7 @@ namespace Spotlights
                     this.holdFire = !this.holdFire;
                     if (this.holdFire)
                     {
-                        this.currentTargetInt = TargetInfo.Invalid;
+                        this.currentTargetInt = LocalTargetInfo.Invalid;
                         this.burstWarmupTicksLeft = 0;
                     }
                 };
@@ -374,7 +374,7 @@ namespace Spotlights
 
         private void ResetForcedTarget()
         {
-            this.forcedTarget = TargetInfo.Invalid;
+            this.forcedTarget = LocalTargetInfo.Invalid;
             if (this.burstCooldownTicksLeft > 0)
                 return;
             this.TryStartShootSomething();

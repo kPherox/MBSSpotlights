@@ -35,7 +35,7 @@ namespace Spotlights
 
             if (mode != DestroyMode.Deconstruct)
                 return;
-            SoundStarter.PlayOneShot(SoundDef.Named("BuildingDeconstructed"), (SoundInfo)this.Position);
+            SoundStarter.PlayOneShot(SoundDef.Named("BuildingDeconstructed"), new TargetInfo(Position, Map, false));
         }
 
         //Based on vanilla Tick for turretguns. Added lines to do SwitchOnSearchLight and CheckLitNow, shown below.
@@ -57,7 +57,7 @@ namespace Spotlights
                 //Also tells the game that the glower building spawned by this turret is spawned by this turret - for destruction synchronisation.
                 if (this.selfLight.DestroyedOrNull())
                 {
-                    this.selfLight = (Building_SpotlightGlower)GenSpawn.Spawn(ThingDef.Named("SpotlightSelfDeployed"), this.Position);
+                    this.selfLight = (Building_SpotlightGlower)GenSpawn.Spawn(ThingDef.Named("SpotlightSelfDeployed"), this.Position, Map);
                     this.selfLight.spawnedBy = this;
                 }
 //                IntVec3 newPosition = getTargetThing().DrawPos.ToIntVec3();
@@ -66,14 +66,14 @@ namespace Spotlights
                 IntVec3 newPosition = this.CurrentTarget.Thing.DrawPos.ToIntVec3();
                 if (this.searchLight.DestroyedOrNull())
                 {
-                    this.searchLight = (Building_SpotlightGlower)GenSpawn.Spawn(ThingDef.Named("SpotlightDeployed"), newPosition);
+                    this.searchLight = (Building_SpotlightGlower)GenSpawn.Spawn(ThingDef.Named("SpotlightDeployed"), newPosition, Map);
                     this.searchLight.spawnedBy = this;
                 }
                 //If target is at new position, destroy old target-glower and spawn new one at new position.
                 if (newPosition != this.searchLight.Position)
                 {
                     SwitchOffSearchLight();
-                    this.searchLight = (Building_SpotlightGlower)GenSpawn.Spawn(ThingDef.Named("SpotlightDeployed"), newPosition);
+                    this.searchLight = (Building_SpotlightGlower)GenSpawn.Spawn(ThingDef.Named("SpotlightDeployed"), newPosition, Map);
                     this.searchLight.spawnedBy = this;
                 }
             }
