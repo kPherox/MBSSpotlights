@@ -1,0 +1,409 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ThingDefs>
+	<!-- ================================= Buildings ================================== -->
+	<!-- ================ Abstract base ================= -->
+	<ThingDef Name="BuildingBase"
+	          Abstract="True">
+		<category>Building</category>
+		<thingClass>Building</thingClass>
+		<soundImpactDefault>BulletImpactMetal</soundImpactDefault>
+		<selectable>true</selectable>
+		<drawerType>MapMeshAndRealTime</drawerType>
+		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+		<repairEffect>Repair</repairEffect>
+		<leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+		<filthLeaving>BuildingRubble</filthLeaving>
+	</ThingDef>
+	<!-- ============= Spotlight abstract base ============== -->
+	<ThingDef Name="SpotlightBase"
+	          ParentName="BuildingBase"
+	          Abstract="True">
+		<thingClass>Spotlights.SpotlightPewPew</thingClass>
+		<graphicData>
+			<texPath>Things/Building/Security/SpotlightBase</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<drawSize>(3,3)</drawSize>
+			<damageData>
+				<rect>(0.38,0.2,0.56375,0.8)</rect>
+			</damageData>
+		</graphicData>
+		<minifiedDef>MinifiedFurniture</minifiedDef>
+		<altitudeLayer>Building</altitudeLayer>
+		<stealable>false</stealable>
+		<statBases>
+			<MaxHitPoints>160</MaxHitPoints>
+			<Flammability>0.5</Flammability>
+			<Beauty>-30</Beauty>
+		</statBases>
+		<tickerType>Normal</tickerType>
+		<comps>
+			<li Class="CompProperties_Forbiddable"/>
+			<li Class="CompProperties_Breakdownable"/>
+		</comps>
+		<passability>PassThroughOnly</passability>
+		<pathCost>50</pathCost>
+		<fillPercent>0.4</fillPercent>
+		<castEdgeShadows>true</castEdgeShadows>
+		<hasToolTip>true</hasToolTip>
+		<stuffCategories>
+			<li>Metallic</li>
+			<li>Woody</li>
+		</stuffCategories>
+		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+		<designationCategory>Security</designationCategory>
+		<specialDisplayRadius>50.9</specialDisplayRadius>
+		<building>
+			<turretGunDef>Gun_Spotlight</turretGunDef>
+		</building>
+	</ThingDef>
+	<!-- =================== Spotlight glower abstract base ================== -->
+	<ThingDef Name="SpotlightDeployedBase"
+			  ParentName="BuildingBase"
+			  Abstract="true">
+		<defName>SpotlightDeployedBase</defName>
+		<label>spotlightnull</label>
+		<thingClass>Spotlights.Building_SpotlightGlower</thingClass>
+		<graphicData>
+			<texPath>Things/Projectile/SpotlightInv</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+		<building>
+			<isEdifice>false</isEdifice>
+		</building>
+		<altitudeLayer>Item</altitudeLayer>
+		<passability>Standable</passability>
+		<selectable>false</selectable>
+		<tickerType>Normal</tickerType>
+		<description/>
+		<size>(1,1)</size>
+	</ThingDef>	
+	<!-- =================== Mannable Spotlight ================== -->
+	<ThingDef ParentName="SpotlightBase">
+		<defName>Spotlight</defName>
+		<label>manual spotlight</label>
+		<hasInteractionCell>True</hasInteractionCell>
+		<interactionCellOffset>(0,0,-1)</interactionCellOffset>
+		<statBases>
+			<WorkToMake>1600</WorkToMake>
+		</statBases>
+		<comps>
+			<li Class="CompProperties_Mannable"/>
+			<li Class="CompProperties_Power">
+				<compClass>CompPowerTrader</compClass>
+				<basePowerConsumption>0</basePowerConsumption>
+				<shortCircuitInRain>false</shortCircuitInRain>
+			</li>
+		</comps>
+		<description>A manual spotlight on a stand, supports home defense in darkness.</description>
+		<costStuffCount>35</costStuffCount>
+		<costList>
+			<Steel>40</Steel>
+			<Component>1</Component>
+		</costList>
+		<building>
+			<turretTopgraphicPath>Things/Building/Security/SpotlightTopManual</turretTopgraphicPath>
+		</building>
+		<researchPrerequisites>
+			<li>Electricity</li>
+		</researchPrerequisites>
+	</ThingDef>
+	<!-- =================== Automated Spotlight ================== -->
+	<ThingDef ParentName="SpotlightBase">
+		<defName>AutoSpotlight</defName>
+		<label>auto spotlight</label>
+		<statBases>
+			<WorkToMake>2000</WorkToMake>
+		</statBases>
+		<comps>
+			<li Class="CompProperties_Power">
+				<compClass>CompPowerTrader</compClass>
+				<basePowerConsumption>50</basePowerConsumption>
+				<shortCircuitInRain>false</shortCircuitInRain>
+			</li>
+			<li Class="CompProperties_Flickable"/>
+		</comps>
+		<description>An automated spotlight, supports defense in darkness.</description>
+		<costStuffCount>70</costStuffCount>
+		<costList>
+			<Steel>80</Steel>
+			<Component>2</Component>
+		</costList>
+		<building>
+			<turretTopgraphicPath>Things/Building/Security/SpotlightTopAuto</turretTopgraphicPath>
+		</building>
+		<researchPrerequisites>
+			<li>Electricity</li>
+			<li>GunTurrets</li>
+		</researchPrerequisites>
+	</ThingDef>
+	<!-- ======= The thing that makes the spotlight light up a little ======== -->
+	<ThingDef ParentName="SpotlightDeployedBase">
+		<defName>SpotlightSelfDeployed</defName>
+		<label>Spotlight's own glower</label>
+		<comps>
+			<li Class="CompProperties_Glower">
+				<glowRadius>3</glowRadius>
+				<glowColor>(225,225,225,0)</glowColor>
+				<overlightRadius>2</overlightRadius>
+			</li>
+		</comps>
+	</ThingDef>
+	<!-- ======= The thing that makes the target light up a lot ======== -->
+	<ThingDef ParentName="SpotlightDeployedBase">
+		<defName>SpotlightDeployed</defName>
+		<label>Spotlight target glower</label>
+		<comps>
+			<li Class="CompProperties_Glower">
+				<glowRadius>11</glowRadius>
+				<glowColor>(255,255,255,0)</glowColor>
+				<overlightRadius>6</overlightRadius>
+			</li>
+		</comps>
+	</ThingDef>
+	<!-- ========================= Weapons and projectiles ======================== -->
+	<!-- ========================= Spotlight weapon ======================== -->
+	<ThingDef Name="Gun_Spotlight">
+		<defName>Gun_Spotlight</defName>
+		<category>Item</category>
+		<thingClass>ThingWithComps</thingClass>
+		<equipmentType>Primary</equipmentType>
+		<tickerType>Normal</tickerType>
+		<comps>
+			<li>
+				<compClass>CompEquippable</compClass>
+			</li>
+		</comps>
+		<label>spotlight lamp</label>
+		<techLevel>Industrial</techLevel>
+		<destroyOnDrop>True</destroyOnDrop>
+		<menuHidden>True</menuHidden>
+		<tradeability>Never</tradeability>
+		<statBases>
+			<MarketValue>1500</MarketValue>
+			<AccuracyTouch>1.00</AccuracyTouch>
+			<AccuracyShort>1.00</AccuracyShort>
+			<AccuracyMedium>1.00</AccuracyMedium>
+			<AccuracyLong>1.00</AccuracyLong>
+			<RangedWeapon_Cooldown>0</RangedWeapon_Cooldown>
+		</statBases>
+		<weaponTags>
+			<li>TurretGun</li>
+		</weaponTags>
+		<verbs>
+			<li>
+				<verbClass>Verb_Shoot</verbClass>
+				<hasStandardCommand>true</hasStandardCommand>
+				<projectileDef>Bullet_Spotlight</projectileDef>
+				<warmupTicks>0</warmupTicks>
+				<range>50</range>
+				<minRange>0.5</minRange>
+			</li>
+		</verbs>
+	</ThingDef>
+	<!-- ========================= Spotlight projectile ======================== -->
+	<ThingDef Name="Bullet_Spotlight">
+		<defName>Bullet_Spotlight</defName>
+		<category>Projectile</category>
+		<label>spotlight round</label>
+		<tickerType>Normal</tickerType>
+		<altitudeLayer>Projectile</altitudeLayer>
+		<thingClass>Spotlights.ProjectileBlank</thingClass>
+		<graphicData>
+			<texPath>Things/Projectile/SpotlightInv</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<shaderType>Transparent</shaderType>
+		</graphicData>
+		<neverMultiSelect>True</neverMultiSelect>
+		<useHitPoints>False</useHitPoints>
+		<projectile>
+			<damageDef>Stun</damageDef>
+			<DamageAmountBase>0</DamageAmountBase>
+			<Speed>1</Speed>
+		</projectile>
+	</ThingDef>
+	<!-- ========================= Turret Spotlight combo ======================== -->	
+  <ThingDef ParentName="BuildingBase">
+    <defName>TurretSpotlight</defName>
+    <label>improvised turret with spotlight</label>
+    <thingClass>Spotlights.Building_TurretSpotlight</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Security/TurretSpotlightBase</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(4,4)</drawSize>
+      <damageData>
+        <rect>(0.2,0.2,0.6,0.6)</rect>
+      </damageData>
+    </graphicData>
+    <minifiedDef>MinifiedFurniture</minifiedDef>
+    <altitudeLayer>Building</altitudeLayer>
+    <stealable>false</stealable>
+    <rotatable>false</rotatable>
+    <statBases>
+      <MaxHitPoints>500</MaxHitPoints>
+      <Flammability>1.0</Flammability>
+      <WorkToMake>2500</WorkToMake>
+      <Beauty>-60</Beauty>
+    </statBases>
+    <tickerType>Normal</tickerType>
+    <comps>
+	  <!-- <li Class="CompProperties_Mannable"/> -->
+      <li Class="CompProperties_Explosive">
+        <explosiveRadius>3.9</explosiveRadius>
+        <explosiveDamageType>Bomb</explosiveDamageType>
+        <chanceNeverExplodeFromDamage>0.5</chanceNeverExplodeFromDamage>
+      </li>
+      <li Class="CompProperties_Forbiddable"/>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>350</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+    <description>An improvised turret that automatically fires at nearby enemies. A spotlight is modded onto the turret. Explodes when damaged. Its hacked-together AI brain isn't very smart, and can't be directly controlled, so beware of friendly fire.</description>
+    <passability>PassThroughOnly</passability>
+    <pathCost>50</pathCost>
+    <fillPercent>0.4</fillPercent>
+    <castEdgeShadows>true</castEdgeShadows>
+    <hasTooltip>true</hasTooltip>
+	<size>2,2</size>
+    <stuffCategories>
+      <li>Metallic</li>
+    </stuffCategories>
+    <costStuffCount>75</costStuffCount>
+    <costList>
+      <Steel>100</Steel>
+      <Component>3</Component>
+    </costList>
+    <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+    <designationCategory>Security</designationCategory>
+    <specialDisplayRadius>25.9</specialDisplayRadius>
+    <building>
+      <ai_combatDangerous>true</ai_combatDangerous>
+      <turretGunDef>Gun_TurretImprovised</turretGunDef>
+      <turretBurstCooldownTicks>310</turretBurstCooldownTicks>
+      <turretTopgraphicPath>Things/Building/Security/TurretSpotlightTopconcept</turretTopgraphicPath>
+    </building>
+    <designationHotKey>Misc2</designationHotKey>
+    <researchPrerequisites>
+      <li>GunTurrets</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+  <ThingDef ParentName="BaseBullet">
+    <defName>Bullet_TurretImprovised</defName>
+    <label>improvised turret bullet</label>
+    <graphicData>
+      <texPath>Things/Projectile/Bullet_Small</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <projectile>
+      <damageDef>Bullet</damageDef>
+      <damageAmountBase>11</damageAmountBase>
+      <speed>70</speed>
+    </projectile>
+  </ThingDef>
+
+  <ThingDef ParentName="BaseHumanGun">
+    <defName>Gun_TurretImprovised</defName>
+    <label>improvised turret gun</label>
+    <graphicData>
+      <texPath>Things/Item/Equipment/WeaponRanged/ChargeRifle</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <menuHidden>true</menuHidden>
+    <description>Jury-rigged gun attached to a turret.</description>
+    <soundInteract>InteractRifle</soundInteract>
+    <canBeSpawningInventory>false</canBeSpawningInventory>
+    <tradeability>Never</tradeability>
+    <destroyOnDrop>true</destroyOnDrop>
+    <canMakeOnMapGen>false</canMakeOnMapGen>
+    <statBases>
+      <AccuracyTouch>0.80</AccuracyTouch>
+      <AccuracyShort>0.64</AccuracyShort>
+      <AccuracyMedium>0.41</AccuracyMedium>
+      <AccuracyLong>0.22</AccuracyLong>
+      <RangedWeapon_Cooldown>0.66</RangedWeapon_Cooldown>
+    </statBases>
+    <weaponTags>
+      <li>TurretGun</li>
+    </weaponTags>
+    <verbs>
+      <li>
+        <verbClass>Verb_Shoot</verbClass>
+        <hasStandardCommand>true</hasStandardCommand>
+        <projectileDef>Bullet_TurretImprovised</projectileDef>
+        <warmupTicks>90</warmupTicks>
+        <range>25.9</range>
+        <ticksBetweenBurstShots>8</ticksBetweenBurstShots>
+        <burstShotCount>3</burstShotCount>
+        <soundCast>GunShotA</soundCast>
+        <soundCastTail>GunTail_Light</soundCastTail>
+        <muzzleFlashScale>9</muzzleFlashScale>
+      </li>
+    </verbs>
+  </ThingDef>
+  
+    <ThingDef Name="BaseGun" Abstract="True">
+    <category>Item</category>
+    <thingClass>ThingWithComps</thingClass>
+    <equipmentType>Primary</equipmentType>
+    <pathCost>10</pathCost>
+    <useHitPoints>True</useHitPoints>
+    <selectable>True</selectable>
+    <graphicData>
+      <onGroundRandomRotateAngle>35</onGroundRandomRotateAngle>
+    </graphicData>
+    <drawGUIOverlay>true</drawGUIOverlay>
+    <statBases>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Flammability>1.0</Flammability>
+      <DeteriorationRate>2</DeteriorationRate>
+      <SellPriceFactor>0.5</SellPriceFactor>
+    </statBases>
+    <altitudeLayer>Item</altitudeLayer>
+    <alwaysHaulable>True</alwaysHaulable>
+    <tickerType>Never</tickerType>
+    <techLevel>Industrial</techLevel>
+    <thingCategories>
+      <li>WeaponsRanged</li>
+    </thingCategories>
+    <inspectorTabs>
+      <li>ITab_Art</li>
+    </inspectorTabs>
+    <comps>
+      <li Class="CompProperties_Forbiddable"/>
+      <li>
+        <compClass>CompEquippable</compClass>
+      </li>
+      <li>
+        <compClass>CompQuality</compClass>
+      </li>
+      <li Class="CompProperties_Art">
+        <nameMaker>ArtName_WeaponGun</nameMaker>
+        <descriptionMaker>ArtDescription_WeaponGun</descriptionMaker>
+        <minQualityForArtistic>Excellent</minQualityForArtistic>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef Name="BaseHumanGun" ParentName="BaseGun" Abstract="True">
+    <weaponTags>
+      <li>Gun</li>
+    </weaponTags>
+  </ThingDef>
+
+  <ThingDef Name="BaseBullet" Abstract="True">
+    <category>Projectile</category>
+    <tickerType>Normal</tickerType>
+    <altitudeLayer>Projectile</altitudeLayer>
+    <thingClass>Bullet</thingClass>
+    <label>bullet</label>
+    <useHitPoints>False</useHitPoints>
+    <neverMultiSelect>True</neverMultiSelect>
+    <graphicData>
+      <shaderType>Transparent</shaderType>
+    </graphicData>
+  </ThingDef>
+	
+</ThingDefs>

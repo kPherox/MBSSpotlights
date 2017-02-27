@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>MBS Spotlights</name>
+	<author>Master Bucketsmith</author>
+	<url>https://ludeon.com/forums/index.php?topic=24192</url>
+	<targetVersion>0.16.1393</targetVersion>
+	<description>Version 2.0
+Adds an automated spotlight that lights the target area up in a small radius.
+When enemies come in range, the spotlight 'fires' and the target becomes lit, increasing the chance of hitting the target for your pawns and turrets.
+It's got a range of 50 tiles, slightly further than any handheld weapon.
+Uses the same clunky AI a vanilla improvised turret has.
+
+Auto Spotlight:
+Power draw: 50W standby, 550W active
+Research requirement: Electricity, GunTurrets
+Cost to make: 70 stuff, 80 steel, 2 components</description>
+</ModMetaData>
