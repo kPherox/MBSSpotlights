@@ -6,6 +6,10 @@ Fixed the A16 version of `System.Reflection.ReflectionTypeLoadException` error o
 
 See [Ludeon Forum](https://ludeon.com/forums/index.php?topic=24192.0).
 
+## Download
+
+download from [Release Page](/releases/latest).
+
 ## License
 ### Credits
 - Ludeon Studios for the game and assets on which this mod is based
