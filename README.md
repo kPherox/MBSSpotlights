@@ -12,6 +12,7 @@ download from [Release Page](/releases/latest).
 
 ## License
 ### Credits
+- Author Bucketsmith
 - Ludeon Studios for the game and assets on which this mod is based
 - eatKenny for creating the original code (and textures?) as part of an obsolete version of his Turret Collection mod
 - Thanks go out to Dieter, GHXX, skullywag, Rikiki, dubwise and others for their code submissions and feedback! (Sorry if I missed your name!)
