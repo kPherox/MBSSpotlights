@@ -17,9 +17,9 @@ namespace Spotlights
 	{
 	    public Thing spawnedBy;
 
-        public override void SpawnSetup(Map map)
+        public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
-            base.SpawnSetup(map);
+            base.SpawnSetup(map, respawningAfterLoad);
         }
 
         public override void Tick()
