@@ -3,8 +3,8 @@
 	<name>MBS Spotlights</name>
 	<author>Master Bucketsmith</author>
 	<url>https://ludeon.com/forums/index.php?topic=24192</url>
-	<targetVersion>0.16.1393</targetVersion>
-	<description>Version 2.0
+	<targetVersion>0.17.1526</targetVersion>
+	<description>Version 3.0
 Adds an automated spotlight that lights the target area up in a small radius.
 When enemies come in range, the spotlight 'fires' and the target becomes lit, increasing the chance of hitting the target for your pawns and turrets.
 It's got a range of 50 tiles, slightly further than any handheld weapon.

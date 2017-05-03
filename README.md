@@ -1,6 +1,6 @@
 # MBS Spotlights
 
-Fixed the A16 version of `System.Reflection.ReflectionTypeLoadException` error of ['17/1/9 update](http://steamcommunity.com/sharedfiles/filedetails/?id=744745312).
+A17 version.
 
 ## Description
 
