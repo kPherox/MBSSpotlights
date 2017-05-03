@@ -273,11 +273,9 @@ namespace Spotlights
                 stringBuilder.AppendLine(inspectString);
             stringBuilder.AppendLine("GunInstalled".Translate() + ": " + this.Gun.Label);
             if ((double) this.GunCompEq.PrimaryVerb.verbProps.minRange > 0.0)
-                stringBuilder.AppendLine("MinimumRange".Translate() + ": " +
-                                         this.GunCompEq.PrimaryVerb.verbProps.minRange.ToString("F0"));
+                stringBuilder.AppendLine("MinimumRange".Translate() + ": " + this.GunCompEq.PrimaryVerb.verbProps.minRange.ToString("F0"));
             if (this.burstCooldownTicksLeft > 0)
-                stringBuilder.AppendLine("CanFireIn".Translate() + ": " +
-                                         this.burstCooldownTicksLeft.TicksToSecondsString());
+                stringBuilder.AppendLine("CanFireIn".Translate() + ": " + this.burstCooldownTicksLeft.TicksToSecondsString());
             if (this.def.building.turretShellDef != null)
             {
                 if (this.loaded)
@@ -285,7 +283,7 @@ namespace Spotlights
                 else
                     stringBuilder.AppendLine("ShellNotLoaded".Translate());
             }
-            return stringBuilder.ToString();
+            return stringBuilder.ToString().TrimEndNewlines();
         }
 
         public override void Draw()
