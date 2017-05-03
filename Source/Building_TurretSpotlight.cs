@@ -99,9 +99,9 @@ namespace Spotlights
             this.top = new TurretTop((Building_Turret) this);
         }
 
-        public override void SpawnSetup(Map map)
+        public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
-            base.SpawnSetup(map);
+            base.SpawnSetup(map, respawningAfterLoad);
             this.powerComp = this.GetComp<CompPowerTrader>();
             this.mannableComp = this.GetComp<CompMannable>();
             this.currentTargetInt = LocalTargetInfo.Invalid;
@@ -112,9 +112,9 @@ namespace Spotlights
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.LookValue<int>(ref this.burstCooldownTicksLeft, "burstCooldownTicksLeft", 0, false);
-            Scribe_Values.LookValue<bool>(ref this.loaded, "loaded", false, false);
-            Scribe_Values.LookValue<bool>(ref this.holdFire, "holdFire", false, false);
+            Scribe_Values.Look<int>(ref this.burstCooldownTicksLeft, "burstCooldownTicksLeft", 0, false);
+            Scribe_Values.Look<bool>(ref this.loaded, "loaded", false, false);
+            Scribe_Values.Look<bool>(ref this.holdFire, "holdFire", false, false);
         }
 
         public override void OrderAttack(LocalTargetInfo targ)
@@ -198,8 +198,8 @@ namespace Spotlights
 
         protected TargetInfo TryFindNewTarget()
         {
-            Thing thing = this.TargSearcher();
-            Faction faction = thing.Faction;
+            IAttackTargetSearcher attackTargetSearcher = this.TargSearcher();
+            Faction faction = attackTargetSearcher.Thing.Faction;
             float range = this.GunCompEq.PrimaryVerb.verbProps.range;
             float minRange = this.GunCompEq.PrimaryVerb.verbProps.minRange;
             Building t;
@@ -220,15 +220,17 @@ namespace Spotlights
             {
                 targetScanFlags |= TargetScanFlags.NeedNonBurning;
             }
-            return AttackTargetFinder.BestShootTargetFromCurrentPosition(thing, new Predicate<Thing>(this.IsValidTarget),
+            return (Thing)AttackTargetFinder.BestShootTargetFromCurrentPosition(attackTargetSearcher, new Predicate<Thing>(this.IsValidTarget),
                 range, minRange, targetScanFlags);
         }
 
-        private Thing TargSearcher()
+        private IAttackTargetSearcher TargSearcher()
         {
             if (this.mannableComp != null && this.mannableComp.MannedNow)
-                return (Thing) this.mannableComp.ManningPawn;
-            return (Thing) this;
+            {
+                return this.mannableComp.ManningPawn;
+            }
+            return this;
         }
 
         private bool IsValidTarget(Thing t)
@@ -271,11 +273,9 @@ namespace Spotlights
                 stringBuilder.AppendLine(inspectString);
             stringBuilder.AppendLine("GunInstalled".Translate() + ": " + this.Gun.Label);
             if ((double) this.GunCompEq.PrimaryVerb.verbProps.minRange > 0.0)
-                stringBuilder.AppendLine("MinimumRange".Translate() + ": " +
-                                         this.GunCompEq.PrimaryVerb.verbProps.minRange.ToString("F0"));
+                stringBuilder.AppendLine("MinimumRange".Translate() + ": " + this.GunCompEq.PrimaryVerb.verbProps.minRange.ToString("F0"));
             if (this.burstCooldownTicksLeft > 0)
-                stringBuilder.AppendLine("CanFireIn".Translate() + ": " +
-                                         this.burstCooldownTicksLeft.TickstoSecondsString());
+                stringBuilder.AppendLine("CanFireIn".Translate() + ": " + this.burstCooldownTicksLeft.TicksToSecondsString());
             if (this.def.building.turretShellDef != null)
             {
                 if (this.loaded)
@@ -283,7 +283,7 @@ namespace Spotlights
                 else
                     stringBuilder.AppendLine("ShellNotLoaded".Translate());
             }
-            return stringBuilder.ToString();
+            return stringBuilder.ToString().TrimEndNewlines();
         }
 
         public override void Draw()
