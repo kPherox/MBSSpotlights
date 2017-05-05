@@ -8,7 +8,7 @@ See [Ludeon Forum](https://ludeon.com/forums/index.php?topic=24192.0).
 
 ## Download
 
-download from [Release Page](/releases/latest).
+download from [Release Page](../../releases/latest).
 
 ## License
 ### Credits
