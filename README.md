@@ -1,6 +1,9 @@
 # MBS Spotlights
 
-A17 version.
+Compiled for A17 version.
+
+DON'T support latest version.  
+FYI: [Issue #2 (comment)](https://github.com/kPherox/MBSSpotlights/issues/2#issuecomment-446490220)
 
 ## Description
 
